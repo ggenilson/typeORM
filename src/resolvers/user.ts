@@ -14,6 +14,20 @@ class AddUserInput {
   @Field(() => String)
   birthDate!: string;
 }
+
+@InputType()
+class UpdateUserInput {
+  @Field(() => String)
+  name!: string;
+
+  @Field(() => String)
+  email!: string;
+
+  @Field(() => String)
+  birthDate!: string;
+}
+
+
 @Resolver(User)
 export default class UserResolver {
   @Query(() => [User])
@@ -32,10 +46,36 @@ export default class UserResolver {
 
   @Mutation(() => User)
   async addUser(@Arg('obj') obj: AddUserInput): Promise<User> {
-    const user = await  User.create(obj);
+    const user = await User.create(obj);
 
     await user.save();
 
     return user;
+  }
+
+  @Mutation(() => User)
+  async updateUser(@Arg("id") id: string, @Arg("obj") obj: UpdateUserInput) {
+    const user = await User.findOne({ where: { id }});
+
+    if (!user) {
+      throw new Error(`The user with id: ${id} does not exist!`);
+    }
+
+    Object.assign(user, obj);
+    await user.save();
+
+    return user;
+  }
+
+  @Mutation(() => Boolean)
+  async deleteUser(@Arg("id") id: string) {
+    const user = await User.findOne({ where: { id }});
+
+    if (!user) {
+      throw new Error(`The user with id: ${id} does not exist!`);
+    }
+
+    await user.remove();
+    return true;
   }
 }

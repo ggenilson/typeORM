@@ -4,7 +4,7 @@ import { ApolloServer, gql } from 'apollo-server-express';
 
 import  { buildSchema } from 'type-graphql';
 
-import { connectionDB, } from './database';
+import { connectionDB } from './database';
 
 import UserResolver from './resolvers/user'
 
