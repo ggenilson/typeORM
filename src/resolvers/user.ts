@@ -16,7 +16,7 @@ class AddUserInput {
 }
 
 // @Resolver(User)
-@Resolver()
+@Resolver(User)
 export default class UserResolver {
   @Query(() => [User])
   async allUsers(): Promise<User[]> {
@@ -24,8 +24,8 @@ export default class UserResolver {
   }
 
   @Mutation(() => User)
-  async addUser( @Arg('obj') obj: AddUserInput) {
-    const user = await User.create(obj);
+  async addUser(@Arg('obj') obj: AddUserInput) {
+    const user = User.create(obj);
 
     await user.save();
 
