@@ -1,15 +1,22 @@
 import { createConnection } from 'typeorm';
 
-export const connection = () => { 
+import path from 'path';
+
+import User from './entities/User'
+
+path.resolve(__dirname, 'entities')
+export const connection = async () => { 
   return createConnection({
     type: 'sqlite',
-    database: './',
+    database: path.resolve(__dirname, 'db.sqlite'),
     synchronize: true,
+    entities: [User],
+    logging: true
   })
   .then((data) => {
     console.log('Database is now connected! ', data.name);
   })
   .catch((err) => {
-    console.log('Database in not connected! ', err);
+    console.log('Database is not connected! ', err);
   }) 
 }
