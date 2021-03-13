@@ -18,8 +18,14 @@ class AddUserInput {
 export default class UserResolver {
   @Query(() => [User])
   async allUsers(): Promise<User[]> {
-
     const users = await User.find();
+
+    return users;
+  }
+
+  @Query(() => User)
+  async user(@Arg("id") id: string) {
+    const users = await User.findOne({ where: { id }});
 
     return users;
   }
