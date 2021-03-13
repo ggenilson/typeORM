@@ -14,24 +14,21 @@ class AddUserInput {
   @Field(() => String)
   birthDate!: string;
 }
-@Resolver(User)
+
+// @Resolver(User)
+@Resolver()
 export default class UserResolver {
   @Query(() => [User])
   async allUsers(): Promise<User[]> {
-
-    const users = await User.find();
-
-    return users;
+    return User.find();
   }
 
   @Mutation(() => User)
-  async addUser( @Arg('obj') obj: AddUserInput
-
-  ): Promise<User> {
-
+  async addUser( @Arg('obj') obj: AddUserInput) {
     const user = await User.create(obj);
 
-    return user
+    await user.save();
 
+    return user;
   }
 }
