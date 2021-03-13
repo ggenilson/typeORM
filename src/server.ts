@@ -1,41 +1,30 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
 
-import { connectionDB } from './database'
+import  { buildSchema } from 'type-graphql';
+
+import { connectionDB, } from './database';
+
+import UserResolver from './resolvers/user'
 
 async function mainServer () {
-  await connectionDB()
+  await connectionDB();
 
-  const typeDefs = gql`
-  type User {
-    name: String
-  }
+  const app = express();
 
-  type Query {
-    allUsers: [User]
-  }
-`;
+  const schema = await buildSchema({
+    resolvers: [UserResolver]
+  });
+ 
+  const server = new ApolloServer({ 
+    schema,
+    playground: true,
+  });
 
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    allUsers: () => ([{ name: "Genilson Araújo" }]),
-  },
-};
+  server.applyMiddleware({ app });
 
-const app = express();
-
-const server = new ApolloServer({ 
-  resolvers,
-  playground: true,
-  typeDefs
-});
-
-server.applyMiddleware({ app });
-
-app.listen(3333, () => console.log(`Server is running ... Graphql path: ${server.graphqlPath}`));
+  app.listen(3333, () => console.log(`Server is running ... Graphql path: ${server.graphqlPath}`));
 }
 
-
-mainServer()
+mainServer();
