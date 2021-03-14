@@ -55,7 +55,7 @@ export default class UserResolver {
 
   @Mutation(() => User)
   async updateUser(@Arg("id") id: string, @Arg("obj") obj: UpdateUserInput) {
-    const user = await User.findOne({ where: { id }});
+    const user = await User.findOne({ where: { id } });
 
     if (!user) {
       throw new Error(`The user with id: ${id} does not exist!`);
